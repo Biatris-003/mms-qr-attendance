@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+  name="theme-color"
+  content="#0b5394"
+>
+
+<title>MMS Academy QR Attendance</title>
+
+
+<!-- QR SCANNER LIBRARY -->
+
+<script
+  src="https://unpkg.com/html5-qrcode"
+  type="text/javascript">
+</script>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+
+  margin: 0;
+
+  min-height: 100vh;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef5fb,
+      #f8fafc
+    );
+
+  color: #1f2937;
+
+}
+
+
+.container {
+
+  width: 100%;
+
+  max-width: 620px;
+
+  margin: auto;
+
+  padding: 20px;
+
+}
+
+
+.header {
+
+  background:
+    linear-gradient(
+      135deg,
+      #0b5394,
+      #073763
+    );
+
+  color: white;
+
+  padding: 28px 20px;
+
+  border-radius: 22px;
+
+  text-align: center;
+
+  box-shadow:
+    0 8px 25px
+    rgba(7,55,99,.20);
+
+  margin-bottom: 18px;
+
+}
+
+
+.logo {
+
+  font-size: 42px;
+
+  margin-bottom: 5px;
+
+}
+
+
+.header h1 {
+
+  margin: 0;
+
+  font-size: 28px;
+
+}
+
+
+.header p {
+
+  margin: 8px 0 0;
+
+  opacity: .9;
+
+}
+
+
+.card {
+
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 20px;
+
+  margin-bottom: 18px;
+
+  box-shadow:
+    0 5px 20px
+    rgba(0,0,0,.06);
+
+}
+
+
+label {
+
+  display: block;
+
+  font-weight: 700;
+
+  margin-bottom: 7px;
+
+}
+
+
+input,
+select {
+
+  width: 100%;
+
+  padding: 14px;
+
+  border:
+    1px solid #d1d5db;
+
+  border-radius: 12px;
+
+  font-size: 16px;
+
+  margin-bottom: 15px;
+
+  outline: none;
+
+}
+
+
+input:focus,
+select:focus {
+
+  border-color: #0b5394;
+
+}
+
+
+button {
+
+  width: 100%;
+
+  padding: 16px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    .15s ease;
+
+}
+
+
+button:active {
+
+  transform:
+    scale(.98);
+
+}
+
+
+.start {
+
+  background: #0b5394;
+
+  color: white;
+
+}
+
+
+.stop {
+
+  background: #dc2626;
+
+  color: white;
+
+  display: none;
+
+  margin-top: 10px;
+
+}
+
+
+.manual-button {
+
+  background: #073763;
+
+  color: white;
+
+}
+
+
+#reader {
+
+  width: 100%;
+
+  margin-top: 18px;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+}
+
+
+.status {
+
+  display: none;
+
+  padding: 15px;
+
+  border-radius: 13px;
+
+  margin-top: 15px;
+
+  text-align: center;
+
+  font-weight: 700;
+
+  line-height: 1.5;
+
+}
+
+
+.status.info {
+
+  display: block;
+
+  background: #dbeafe;
+
+  color: #1e40af;
+
+}
+
+
+.status.success {
+
+  display: block;
+
+  background: #dcfce7;
+
+  color: #166534;
+
+}
+
+
+.status.warning {
+
+  display: block;
+
+  background: #fef3c7;
+
+  color: #92400e;
+
+}
+
+
+.status.error {
+
+  display: block;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+}
+
+
+.student {
+
+  display: none;
+
+  text-align: center;
+
+}
+
+
+.student-icon {
+
+  font-size: 55px;
+
+}
+
+
+.student-name {
+
+  color: #0b5394;
+
+  font-size: 27px;
+
+  font-weight: 800;
+
+  margin-top: 8px;
+
+}
+
+
+.student-info {
+
+  color: #64748b;
+
+  margin-top: 7px;
+
+}
+
+
+.small {
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  margin-top: 10px;
+
+}
+
+
+.divider {
+
+  text-align: center;
+
+  color: #94a3b8;
+
+  margin: 18px 0;
+
+}
+
+
+.footer {
+
+  text-align: center;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+
+  padding-bottom: 20px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="logo">
+🤖
+</div>
+
+<h1>
+MMS ACADEMY
+</h1>
+
+<p>
+QR Attendance System
+</p>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div class="card">
+
+
+<label>
+Teacher
+</label>
+
+<input
+  id="teacher"
+  type="text"
+  placeholder="Enter teacher name"
+  autocomplete="name"
+>
+
+
+<label>
+Session
+</label>
+
+<select id="session">
+
+<option value="General">
+General Session
+</option>
+
+<option value="Robotics L1 - 14:00">
+Robotics L1 — 14:00
+</option>
+
+<option value="Robotics L2 - 16:00">
+Robotics L2 — 16:00
+</option>
+
+<option value="Arduino L1 - 18:00">
+Arduino L1 — 18:00
+</option>
+
+<option value="Arduino L2 - 20:00">
+Arduino L2 — 20:00
+</option>
+
+</select>
+
+
+<!-- START -->
+
+<button
+  id="startButton"
+  class="start"
+  onclick="startScanner()"
+>
+
+📷 START SCANNING
+
+</button>
+
+
+<!-- STOP -->
+
+<button
+  id="stopButton"
+  class="stop"
+  onclick="stopScanner()"
+>
+
+⛔ STOP SCANNING
+
+</button>
+
+
+<!-- CAMERA -->
+
+<div id="reader"></div>
+
+
+<!-- STATUS -->
+
+<div
+  id="status"
+  class="status">
+</div>
+
+
+<div class="small">
+
+Press START SCANNING to request camera permission.
+
+</div>
+
+
+</div>
+
+
+<!-- STUDENT RESULT -->
+
+<div
+  id="studentCard"
+  class="card student"
+>
+
+<div class="student-icon">
+👨‍🎓
+</div>
+
+<div
+  id="studentName"
+  class="student-name">
+</div>
+
+<div
+  id="studentId"
+  class="student-info">
+</div>
+
+<div
+  id="studentLevel"
+  class="student-info">
+</div>
+
+</div>
+
+
+<!-- MANUAL BACKUP -->
+
+<div class="card">
+
+
+<label>
+Manual Student ID
+</label>
+
+<input
+  id="manualId"
+  type="text"
+  placeholder="Example: MMS-001"
+>
+
+
+<button
+  class="manual-button"
+  onclick="manualAttendance()"
+>
+
+✓ MARK ATTENDANCE
+
+</button>
+
+
+<div class="small">
+
+Use this if a student's QR code cannot be scanned.
+
+</div>
+
+</div>
+
+
+<div class="footer">
+
+MMS Academy • QR Attendance System
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/************************************************
+ * IMPORTANT CONFIGURATION
+ ************************************************/
+
+
+/*
+ * AFTER YOU DEPLOY CODE.GS,
+ * GOOGLE WILL GIVE YOU A URL ENDING IN /exec.
+ *
+ * PASTE THAT URL HERE.
+ */
+
+const BACKEND_URL =
+  "https://script.google.com/macros/s/AKfycbylbdCj_q-N2Z17zjwcHFZnp7N2EJmdz5_iVLlIpRQEvbAdW2bfoIU7lbTBTP1pI8oewQ/exec";
+
+
+/*
+ * THIS MUST MATCH CONFIG.APP_TOKEN
+ * IN Code.gs.
+ */
+
+const APP_TOKEN =
+  "MMS-QR-2026-Cairo-7Kx9P2vL4nQ8-ATTD-6Fz3R";
+
+
+/************************************************
+ * GLOBAL VARIABLES
+ ************************************************/
+
+let scanner = null;
+
+let scannerRunning = false;
+
+let processingScan = false;
+
+
+/************************************************
+ * PAGE LOAD
+ ************************************************/
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    /*
+     * Remember teacher name
+     * on the same browser.
+     */
+
+    const savedTeacher =
+      localStorage.getItem(
+        "mms_teacher"
+      );
+
+
+    if (savedTeacher) {
+
+      document
+        .getElementById(
+          "teacher"
+        )
+        .value =
+          savedTeacher;
+
+    }
+
+
+    document
+      .getElementById(
+        "teacher"
+      )
+      .addEventListener(
+        "input",
+        function() {
+
+          localStorage.setItem(
+
+            "mms_teacher",
+
+            this.value
+
+          );
+
+        }
+      );
+
+
+    /*
+     * Backend health check.
+     */
+
+    if (
+      BACKEND_URL !==
+      "PASTE_YOUR_EXEC_URL_HERE"
+    ) {
+
+      testBackend();
+
+    }
+
+  }
+);
+
+
+/************************************************
+ * BACKEND HEALTH TEST
+ ************************************************/
+
+function testBackend() {
+
+
+  jsonpRequest(
+
+    "health",
+
+    {},
+
+    function(response) {
+
+      if (
+        response &&
+        response.success
+      ) {
+
+        console.log(
+          "MMS backend:",
+          response.message
+        );
+
+      }
+
+    }
+
+  );
+
+}
+
+
+/************************************************
+ * START CAMERA
+ ************************************************/
+
+async function startScanner() {
+
+
+  if (scannerRunning) {
+
+    return;
+
+  }
+
+
+  if (
+    BACKEND_URL ===
+    "PASTE_YOUR_EXEC_URL_HERE"
+  ) {
+
+    showStatus(
+
+      "error",
+
+      "❌ Backend URL has not been added yet."
+
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !window.isSecureContext
+  ) {
+
+    showStatus(
+
+      "error",
+
+      "❌ Camera access requires HTTPS.<br><br>" +
+
+      "Open the published HTTPS scanner page, " +
+
+      "not a local file."
+
+    );
+
+    return;
+
+  }
+
+
+  clearStatus();
+
+
+  try {
+
+
+    showStatus(
+
+      "info",
+
+      "📷 Requesting camera permission..."
+
+    );
+
+
+    /*
+     * Create QR scanner.
+     */
+
+    scanner =
+      new Html5Qrcode(
+        "reader"
+      );
+
+
+    /*
+     * THIS IS THE IMPORTANT PART.
+     *
+     * getCameras() causes the browser
+     * to request camera permission
+     * when permission has not already
+     * been granted.
+     */
+
+    const cameras =
+      await Html5Qrcode.getCameras();
+
+
+    if (
+      !cameras ||
+      cameras.length === 0
+    ) {
+
+      throw new Error(
+        "No camera was found."
+      );
+
+    }
+
+
+    /*
+     * Choose camera.
+     */
+
+    let selectedCamera =
+      cameras[0];
+
+
+    /*
+     * Prefer rear camera
+     * on mobile.
+     */
+
+    const preferredCamera =
+      cameras.find(
+
+        function(camera) {
+
+          const label =
+            String(
+              camera.label || ""
+            ).toLowerCase();
+
+
+          return (
+
+            label.includes(
+              "back"
+            ) ||
+
+            label.includes(
+              "rear"
+            ) ||
+
+            label.includes(
+              "environment"
+            )
+
+          );
+
+        }
+
+      );
+
+
+    if (
+      preferredCamera
+    ) {
+
+      selectedCamera =
+        preferredCamera;
+
+    }
+
+
+    /*
+     * Start scanner.
+     */
+
+    await scanner.start(
+
+      selectedCamera.id,
+
+      {
+
+        fps: 10,
+
+        qrbox: {
+
+          width: 250,
+
+          height: 250
+
+        },
+
+        aspectRatio:
+          1.7777778
+
+      },
+
+      onScanSuccess,
+
+      onScanFailure
+
+    );
+
+
+    scannerRunning =
+      true;
+
+
+    document
+      .getElementById(
+        "startButton"
+      )
+      .style.display =
+        "none";
+
+
+    document
+      .getElementById(
+        "stopButton"
+      )
+      .style.display =
+        "block";
+
+
+    showStatus(
+
+      "info",
+
+      "📷 Camera ready.<br>" +
+
+      "Point the camera at the student's QR code."
+
+    );
+
+  }
+
+
+  catch (error) {
+
+
+    console.error(
+      "Camera error:",
+      error
+    );
+
+
+    scannerRunning =
+      false;
+
+
+    document
+      .getElementById(
+        "startButton"
+      )
+      .style.display =
+        "block";
+
+
+    document
+      .getElementById(
+        "stopButton"
+      )
+      .style.display =
+        "none";
+
+
+    let message =
+      "❌ Could not access the camera.";
+
+
+    const errorText =
+      String(
+        error &&
+        error.message
+          ? error.message
+          : error
+      );
+
+
+    if (
+      error &&
+      error.name ===
+      "NotAllowedError"
+    ) {
+
+      message =
+
+        "❌ Camera permission was denied.<br><br>" +
+
+        "Allow camera access in your browser settings, " +
+
+        "then press START SCANNING again.";
+
+    }
+
+
+    else if (
+      errorText
+        .toLowerCase()
+        .includes(
+          "permission"
+        )
+    ) {
+
+      message =
+
+        "❌ Camera permission is blocked.<br><br>" +
+
+        "Allow camera access for this website " +
+
+        "and press START SCANNING again.";
+
+    }
+
+
+    else if (
+      errorText
+        .toLowerCase()
+        .includes(
+          "secure"
+        )
+    ) {
+
+      message =
+
+        "❌ Camera requires a secure HTTPS website.";
+
+    }
+
+
+    else {
+
+      message +=
+        "<br><br>" +
+        errorText;
+
+    }
+
+
+    showStatus(
+
+      "error",
+
+      message
+
+    );
+
+  }
+
+}
+
+
+/************************************************
+ * STOP CAMERA
+ ************************************************/
+
+async function stopScanner() {
+
+
+  if (
+    !scanner
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    if (
+      scannerRunning
+    ) {
+
+      await scanner.stop();
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+  }
+
+
+  try {
+
+    scanner.clear();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+  }
+
+
+  scanner =
+    null;
+
+
+  scannerRunning =
+    false;
+
+
+  document
+    .getElementById(
+      "startButton"
+    )
+    .style.display =
+      "block";
+
+
+  document
+    .getElementById(
+      "stopButton"
+    )
+    .style.display =
+      "none";
+
+}
+
+
+/************************************************
+ * QR SCAN SUCCESS
+ ************************************************/
+
+async function onScanSuccess(
+  decodedText
+) {
+
+
+  /*
+   * Prevent repeated QR callbacks.
+   */
+
+  if (
+    processingScan
+  ) {
+
+    return;
+
+  }
+
+
+  processingScan =
+    true;
+
+
+  /*
+   * Stop camera immediately.
+   */
+
+  await stopScanner();
+
+
+  /*
+   * Send ID to backend.
+   */
+
+  processAttendance(
+    decodedText
+  );
+
+}
+
+
+/************************************************
+ * QR SCAN FAILURE
+ ************************************************/
+
+function onScanFailure(
+  errorMessage
+) {
+
+  /*
+   * Ignore normal scanner misses.
+   */
+
+}
+
+
+/************************************************
+ * PROCESS ATTENDANCE
+ ************************************************/
+
+function processAttendance(
+  studentId
+) {
+
+
+  studentId =
+    String(
+      studentId || ""
+    ).trim();
+
+
+  if (!studentId) {
+
+    processingScan =
+      false;
+
+
+    showStatus(
+
+      "error",
+
+      "❌ QR code is empty."
+
+    );
+
+
+    return;
+
+  }
+
+
+  const teacher =
+    document
+      .getElementById(
+        "teacher"
+      )
+      .value
+      .trim() ||
+      "Teacher";
+
+
+  const session =
+    document
+      .getElementById(
+        "session"
+      )
+      .value;
+
+
+  showStatus(
+
+    "info",
+
+    "⏳ Checking student..."
+
+  );
+
+
+  /*
+   * FIND STUDENT
+   */
+
+  jsonpRequest(
+
+    "find",
+
+    {
+
+      studentId:
+        studentId
+
+    },
+
+    function(response) {
+
+
+      if (
+        !response ||
+        !response.success
+      ) {
+
+        processingScan =
+          false;
+
+
+        showStatus(
+
+          "error",
+
+          "❌ " +
+
+          (
+            response &&
+            response.message
+              ? response.message
+              : "Student not found."
+          )
+
+        );
+
+
+        return;
+
+      }
+
+
+      /*
+       * Show student.
+       */
+
+      displayStudent(
+        response.student
+      );
+
+
+      /*
+       * Record attendance.
+       */
+
+      showStatus(
+
+        "info",
+
+        "⏳ Recording attendance..."
+
+      );
+
+
+      jsonpRequest(
+
+        "attendance",
+
+        {
+
+          studentId:
+            studentId,
+
+          teacher:
+            teacher,
+
+          session:
+            session
+
+        },
+
+        function(result) {
+
+
+          processingScan =
+            false;
+
+
+          if (
+            result &&
+            result.success
+          ) {
+
+
+            displayStudent(
+              result.student
+            );
+
+
+            if (
+              result.status ===
+              "Late"
+            ) {
+
+
+              showStatus(
+
+                "warning",
+
+                "🟡 LATE<br>" +
+
+                result.student.name +
+
+                "<br>" +
+
+                result.timestamp +
+
+                "<br>" +
+
+                result.lateMinutes +
+
+                " minutes late."
+
+              );
+
+            }
+
+            else {
+
+
+              showStatus(
+
+                "success",
+
+                "🟢 PRESENT<br>" +
+
+                result.student.name +
+
+                "<br>" +
+
+                result.timestamp
+
+              );
+
+            }
+
+
+            return;
+
+          }
+
+
+          if (
+            result &&
+            result.duplicate
+          ) {
+
+
+            showStatus(
+
+              "warning",
+
+              "⚠️ ALREADY RECORDED<br>" +
+
+              result.student.name +
+
+              "<br>" +
+
+              "Time: " +
+
+              result.existingTime
+
+            );
+
+
+            return;
+
+          }
+
+
+          showStatus(
+
+            "error",
+
+            "❌ " +
+
+            (
+              result &&
+              result.message
+                ? result.message
+                : "Attendance could not be recorded."
+            )
+
+          );
+
+        }
+
+      );
+
+    }
+
+  );
+
+}
+
+
+/************************************************
+ * MANUAL ATTENDANCE
+ ************************************************/
+
+function manualAttendance() {
+
+
+  const id =
+    document
+      .getElementById(
+        "manualId"
+      )
+      .value
+      .trim();
+
+
+  if (!id) {
+
+    showStatus(
+
+      "error",
+
+      "❌ Enter a Student ID."
+
+    );
+
+
+    return;
+
+  }
+
+
+  processingScan =
+    false;
+
+
+  processAttendance(
+    id
+  );
+
+}
+
+
+/************************************************
+ * JSONP API REQUEST
+ ************************************************/
+
+function jsonpRequest(
+  action,
+  params,
+  callback
+) {
+
+
+  const callbackName =
+
+    "mmsCallback_" +
+
+    Date.now() +
+
+    "_" +
+
+    Math.floor(
+      Math.random() *
+      100000
+    );
+
+
+  let script = null;
+
+
+  window[callbackName] =
+    function(data) {
+
+
+      try {
+
+        callback(
+          data
+        );
+
+      }
+
+      finally {
+
+
+        delete window[
+          callbackName
+        ];
+
+
+        if (
+          script &&
+          script.parentNode
+        ) {
+
+          script.parentNode
+            .removeChild(
+              script
+            );
+
+        }
+
+      }
+
+    };
+
+
+  const query =
+    new URLSearchParams();
+
+
+  query.set(
+    "action",
+    action
+  );
+
+
+  query.set(
+    "token",
+    APP_TOKEN
+  );
+
+
+  query.set(
+    "callback",
+    callbackName
+  );
+
+
+  Object.keys(
+    params || {}
+  ).forEach(
+
+    function(key) {
+
+      query.set(
+
+        key,
+
+        params[key]
+
+      );
+
+    }
+
+  );
+
+
+  script =
+    document.createElement(
+      "script"
+    );
+
+
+  script.src =
+    BACKEND_URL +
+    "?" +
+    query.toString();
+
+
+  script.onerror =
+    function() {
+
+
+      delete window[
+        callbackName
+      ];
+
+
+      if (
+        script.parentNode
+      ) {
+
+        script.parentNode
+          .removeChild(
+            script
+          );
+
+      }
+
+
+      processingScan =
+        false;
+
+
+      showStatus(
+
+        "error",
+
+        "❌ Could not connect to MMS backend."
+
+      );
+
+    };
+
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+
+/************************************************
+ * DISPLAY STUDENT
+ ************************************************/
+
+function displayStudent(
+  student
+) {
+
+
+  document
+    .getElementById(
+      "studentCard"
+    )
+    .style.display =
+      "block";
+
+
+  document
+    .getElementById(
+      "studentName"
+    )
+    .innerText =
+      student.name ||
+      "";
+
+
+  document
+    .getElementById(
+      "studentId"
+    )
+    .innerText =
+      "Student ID: " +
+      (
+        student.id ||
+        ""
+      );
+
+
+  document
+    .getElementById(
+      "studentLevel"
+    )
+    .innerText =
+      "Level: " +
+      (
+        student.level ||
+        ""
+      );
+
+}
+
+
+/************************************************
+ * STATUS
+ ************************************************/
+
+function showStatus(
+  type,
+  message
+) {
+
+
+  const status =
+    document
+      .getElementById(
+        "status"
+      );
+
+
+  status.className =
+    "status " +
+    type;
+
+
+  status.innerHTML =
+    message;
+
+
+  status.style.display =
+    "block";
+
+}
+
+
+/************************************************
+ * CLEAR STATUS
+ ************************************************/
+
+function clearStatus() {
+
+
+  const status =
+    document
+      .getElementById(
+        "status"
+      );
+
+
+  status.style.display =
+    "none";
+
+
+  status.innerHTML =
+    "";
+
+}
+
+</script>
+
+
+</body>
+
+</html>
