@@ -1151,43 +1151,25 @@ async function stopScanner() {
  * QR SCAN SUCCESS
  ************************************************/
 
-async function onScanSuccess(
+async function    onScanSuccess(
   decodedText
 ) {
-
-
   /*
    * Prevent repeated QR callbacks.
    */
-
-  if (
-    processingScan
-  ) {
-
+  if (processingScan) {
     return;
-
   }
+  processingScan = true;
+  console.log("QR SCANNED:", decodedText);
+  document.getElementById("manualId").value =
+  decodedText.trim();
 
-
-  processingScan =
-    true;
-
-
-  /*
-   * Stop camera immediately.
-   */
-
+  /*  * Stop camera immediately.  */
   await stopScanner();
 
-
-  /*
-   * Send ID to backend.
-   */
-
-  processAttendance(
-    decodedText
-  );
-
+  /* * Send ID to backend. */
+  processAttendance(decodedText.trim());
 }
 
 
